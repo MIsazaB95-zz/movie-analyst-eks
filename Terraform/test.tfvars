@@ -23,6 +23,7 @@ aws_key_pair  = "/home/developer/Documents/cloud-ssh-keys/linux_key.pem"
 db_instance_type = "db.t2.micro"
 db_username      = "prueba"
 db_password      = "password"
+initial_db_name  = "movie_db"
 engine           = "mysql"
 engine_version   = "8.0"
 

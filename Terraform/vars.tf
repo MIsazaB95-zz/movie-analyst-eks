@@ -51,6 +51,10 @@ variable "aws_key_pair" {}
 variable "db_instance_type" {}
 variable "db_username" {}
 variable "db_password" {}
+variable "initial_db_name" {
+  type        = string
+  description = "(optional) describe your variable"
+}
 variable "engine" {}
 variable "engine_version" {}
 

@@ -6,6 +6,7 @@ resource "aws_instance" "bastion" {
   security_groups             = [aws_security_group.bastion_sg.id]
   associate_public_ip_address = true
   subnet_id                   = element(aws_subnet.dmz_public.*.id, 0)
+  user_data                   = filebase64("${path.module}/bastion.sh")
   tags = {
     Name        = "bastion"
     Environment = "Test"
@@ -45,7 +46,7 @@ resource "aws_launch_template" "cluster_conf" {
     name = aws_iam_instance_profile.cluster.name
     arn  = aws_iam_instance_profile.cluster.arn
   }
-  vpc_security_group_ids = [aws_security_group.cluster_sg.id, aws_security_group.general_sg.id]
+  vpc_security_group_ids = [aws_security_group.cluster_nodes_sg.id, aws_security_group.general_sg.id]
   tag_specifications {
     resource_type = "instance"
     tags = {
@@ -104,14 +105,4 @@ resource "aws_db_parameter_group" "default" {
 resource "aws_db_subnet_group" "default" {
   name       = "main"
   subnet_ids = aws_subnet.clusterprivate.*.id
-}
-
-resource "null_resource" "db_provision" {
-  depends_on = [aws_route53_record.db]
-  provisioner "local-exec" {
-    command = <<EOT
-chmod +x mysql.sh
-${path.module}/mysql.sh
-    EOT
-  }
 }

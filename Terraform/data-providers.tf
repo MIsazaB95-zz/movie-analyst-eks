@@ -17,3 +17,11 @@ data "aws_ami" "ubuntu_18_latest" {
 }
 
 data "aws_caller_identity" "current" {}
+
+data "aws_eks_cluster" "cluster" {
+  name = module.eks-cluster.cluster_id
+}
+
+data "aws_eks_cluster_auth" "cluster" {
+  name = module.eks-cluster.cluster_id
+}

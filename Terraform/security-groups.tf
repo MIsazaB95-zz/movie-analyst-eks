@@ -96,26 +96,25 @@ resource "aws_security_group" "general_sg" {
   description = "Allow bastion and nat traffic from/to instances"
 }
 
-resource "aws_security_group" "lb_cluster_sg" {
-  name   = "LB cluster rules"
+resource "aws_security_group" "cluster_sg" {
+  name   = "Cluster rules"
   vpc_id = aws_vpc.test.id
-
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
   egress {
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
-    security_groups = [aws_security_group.cluster_sg.id]
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
+  description = "Allow bastion and nat traffic from/to instances"
 }
 
-resource "aws_security_group" "cluster_sg" {
+resource "aws_security_group" "cluster_nodes_sg" {
   name        = "cluster rules"
   vpc_id      = aws_vpc.test.id
   description = "Allow http traffic to api server"
@@ -128,7 +127,7 @@ resource "aws_security_group" "db_sg" {
     from_port       = 3306
     to_port         = 3306
     protocol        = "tcp"
-    security_groups = [aws_security_group.cluster_sg.id, aws_security_group.bastion_sg.id]
+    security_groups = [aws_security_group.cluster_nodes_sg.id, aws_security_group.bastion_sg.id]
   }
   description = "Allow mysql traffic from/to backend instances"
 }
