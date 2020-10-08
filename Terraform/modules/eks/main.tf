@@ -26,9 +26,15 @@ resource "aws_iam_role_policy_attachment" "AmazonEKSServicePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
   role       = aws_iam_role.eks_cluster.name
 }
+resource "aws_cloudwatch_log_group" "this" {
+  name              = "/aws/eks/${var.cluster_name}/cluster"
+  retention_in_days = 90
+}
 
 resource "aws_eks_cluster" "aws_eks" {
-  name     = "eks_cluster_tuto"
+  depends_on = [aws_cloudwatch_log_group.this]
+  name     = var.cluster_name
+  enabled_cluster_log_types = ["api", "audit"]
   role_arn = aws_iam_role.eks_cluster.arn
 
   vpc_config {
@@ -81,16 +87,22 @@ resource "aws_eks_node_group" "node" {
   node_group_name = var.node_group_name
   node_role_arn   = aws_iam_role.eks_nodes.arn
   subnet_ids      = var.node_subnets_ids
-
-  launch_template {
-    id      = var.launch_template_id
-    version = var.launch_template_version
+  instance_types = var.instance_types
+  labels = {
+    "Name" = "eks_node_group"
   }
-
+  remote_access {
+    ec2_ssh_key = var.ec2_ssh_key
+    source_security_group_ids = var.source_security_group_ids
+  }
   scaling_config {
     desired_size = var.desired_size
     max_size     = var.max_size
     min_size     = var.min_size
+  }
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes        = [scaling_config.0.desired_size]
   }
 
   # Ensure that IAM Role permissions are created before and deleted after EKS Node Group handling.

@@ -1,4 +1,5 @@
 resource "aws_instance" "bastion" {
+  depends_on                  = [aws_route53_record.db]
   monitoring                  = true
   ami                         = data.aws_ami.ubuntu_18_latest.id
   instance_type               = var.instance_type
@@ -18,7 +19,7 @@ resource "aws_instance" "bastion" {
 
 resource "aws_instance" "nat" {
   monitoring                  = true
-  ami                         = data.aws_ami.linux_latest.id
+  ami                         = data.aws_ami.nat_latest.id
   instance_type               = var.instance_type
   key_name                    = var.key_name
   security_groups             = [aws_security_group.nat_sg.id]
@@ -38,15 +39,11 @@ resource "aws_launch_template" "cluster_conf" {
   monitoring {
     enabled = true
   }
-  name_prefix   = "cluster_server_config"
-  image_id      = data.aws_ami.ubuntu_18_latest.id
-  instance_type = var.instance_type
-  key_name      = var.key_name
-  iam_instance_profile {
-    name = aws_iam_instance_profile.cluster.name
-    arn  = aws_iam_instance_profile.cluster.arn
-  }
-  vpc_security_group_ids = [aws_security_group.cluster_nodes_sg.id, aws_security_group.general_sg.id]
+  name_prefix            = "cluster_server_config"
+  image_id               = data.aws_ami.eks_latest.id
+  instance_type          = var.instance_type
+  key_name               = var.key_name
+  vpc_security_group_ids = [aws_security_group.cluster_nodes_sg.id]
   tag_specifications {
     resource_type = "instance"
     tags = {

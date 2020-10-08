@@ -16,8 +16,10 @@ resource "aws_subnet" "dmz_public" {
   map_public_ip_on_launch = "true"
   availability_zone       = element(var.public_subnet_zone, count.index)
   tags = {
-    Name = element(var.public_subnet_zone, count.index)
-    Type = "public"
+    Name                                     = element(var.public_subnet_zone, count.index)
+    Type                                     = "public"
+    "kubernetes.io/cluster/eks_cluster_tuto" = "shared"
+    "kubernetes.io/role/elb"                 = "1"
   }
 }
 
@@ -28,8 +30,10 @@ resource "aws_subnet" "clusterprivate" {
   map_public_ip_on_launch = "false"
   availability_zone       = element(var.cluster_subnet_zone, count.index)
   tags = {
-    Name = element(var.cluster_subnet_zone, count.index)
-    Type = "private"
+    Name                                     = element(var.cluster_subnet_zone, count.index)
+    Type                                     = "private"
+    "kubernetes.io/cluster/eks_cluster_tuto" = "shared"
+    "kubernetes.io/role/internal-elb"        = "1"
   }
 }
 

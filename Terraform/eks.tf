@@ -1,15 +1,17 @@
 module "eks-cluster" {
-  source                  = "./modules/eks"
-  subnet_ids              = aws_subnet.dmz_public.*.id
-  security_group_ids     = [aws_security_group.cluster_sg.id]
-  node_subnets_ids        = aws_subnet.clusterprivate.*.id
-  endpoint_private_access = true
-  node_group_name         = "test-cluster"
-  launch_template_id      = aws_launch_template.cluster_conf.id
-  launch_template_version = aws_launch_template.cluster_conf.latest_version
-  desired_size            = 1
-  max_size                = 5
-  min_size                = 1
+  source                    = "./modules/eks"
+  cluster_name              = "eks_cluster_tuto"
+  subnet_ids                = aws_subnet.dmz_public.*.id
+  instance_types            = ["t3.medium"]
+  security_group_ids        = [aws_security_group.cluster_sg.id]
+  node_subnets_ids          = aws_subnet.dmz_public.*.id
+  endpoint_private_access   = true
+  node_group_name           = "test-cluster"
+  ec2_ssh_key               = var.key_name
+  source_security_group_ids = [aws_security_group.cluster_nodes_sg.id]
+  desired_size              = 1
+  max_size                  = 5
+  min_size                  = 1
 }
 provider "kubernetes" {
   host                   = data.aws_eks_cluster.cluster.endpoint

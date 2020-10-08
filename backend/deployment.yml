@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: movie-analyst-api
@@ -22,7 +22,7 @@ spec:
         app: movie-analyst-api
     spec:
       containers:
-        - image: miguelisaza95/movie-analyst-api:0.0.5
+        - image: miguelisaza95/movie-analyst-api:latest
           imagePullPolicy: IfNotPresent
           name: movie-analyst-api
           ports:

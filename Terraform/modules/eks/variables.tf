@@ -1,3 +1,7 @@
+variable "cluster_name" {
+    type = string
+    description = "(optional) describe your variable"
+}
 variable "subnet_ids" {
     type = list(string)
     description = "(optional) describe your variable"
@@ -18,12 +22,16 @@ variable "node_group_name" {
     type = string
     description = "(optional) describe your variable"
 }
-variable "launch_template_id" {
+variable "ec2_ssh_key" {
     type = string
     description = "(optional) describe your variable"
 }
-variable "launch_template_version" {
-    type = number
+variable "source_security_group_ids" {
+    type = list(string)
+    description = "(optional) describe your variable"
+}
+variable "instance_types" {
+    type = list(string)
     description = "(optional) describe your variable"
 }
 variable "desired_size" {

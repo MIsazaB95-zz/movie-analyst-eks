@@ -115,7 +115,7 @@ resource "aws_security_group" "cluster_sg" {
 }
 
 resource "aws_security_group" "cluster_nodes_sg" {
-  name        = "cluster rules"
+  name        = "Cluster nodes rules"
   vpc_id      = aws_vpc.test.id
   description = "Allow http traffic to api server"
 }
