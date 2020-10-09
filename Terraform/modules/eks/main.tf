@@ -91,6 +91,9 @@ resource "aws_eks_node_group" "node" {
   labels = {
     "Name" = "eks_node_group"
   }
+  tags = {
+    "Name" = "eks_node"
+  }
   remote_access {
     ec2_ssh_key = var.ec2_ssh_key
     source_security_group_ids = var.source_security_group_ids

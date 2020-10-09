@@ -3,13 +3,13 @@ module "eks-cluster" {
   cluster_name              = "eks_cluster_tuto"
   subnet_ids                = aws_subnet.dmz_public.*.id
   instance_types            = ["t3.medium"]
-  security_group_ids        = [aws_security_group.cluster_sg.id]
-  node_subnets_ids          = aws_subnet.dmz_public.*.id
+  security_group_ids        = [aws_security_group.cluster_sg.id, aws_security_group.general_sg.id]
+  node_subnets_ids          = [aws_subnet.clusterprivate.0.id, aws_subnet.clusterprivate.1.id]
   endpoint_private_access   = true
   node_group_name           = "test-cluster"
   ec2_ssh_key               = var.key_name
   source_security_group_ids = [aws_security_group.cluster_nodes_sg.id]
-  desired_size              = 1
+  desired_size              = 2
   max_size                  = 5
   min_size                  = 1
 }

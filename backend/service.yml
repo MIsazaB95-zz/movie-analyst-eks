@@ -4,6 +4,8 @@ metadata:
   labels: #PODS
     apps: movie-analyst-api
   name: movie-analyst-api
+  annotations:
+      service.beta.kubernetes.io/aws-load-balancer-internal: "true"
   namespace: default
 spec:
   ports:
@@ -13,4 +15,4 @@ spec:
   selector:
     app: movie-analyst-api
   sessionAffinity: None
-  type: ClusterIP
+#  type: ClusterIP --> If we don´t specify a service type, ClusterIP is going to be the default ServiceType.

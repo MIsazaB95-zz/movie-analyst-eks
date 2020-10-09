@@ -13,4 +13,4 @@ spec:
   selector:
     app: movie-analyst-ui
   sessionAffinity: None
-  type: ClusterIP
+#  type: ClusterIP --> If we don´t specify a service type, ClusterIP is going to be the default ServiceType.
